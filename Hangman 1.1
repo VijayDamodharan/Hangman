@@ -1,0 +1,496 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'Hangman.ui'
+#
+# Created by: PyQt5 UI code generator 5.13.0
+#
+# WARNING! All changes made in this file will be lost!
+
+### fix drawing circles
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QInputDialog, QWidget
+from PyQt5.QtGui import QPainter, QBrush, QPen
+from PyQt5.QtCore import Qt
+import re
+
+allowed = re.compile('[a-zA-Z ]')
+
+
+class Ui_MainWindow(QtWidgets.QMainWindow):
+    answer = [] #list of correct charcters they have inputted
+    required = '' #string containing the solution
+    indicies = {} #indicies mapping the index of each correct character in solution to the actual character
+    wrong_count = 0
+    pressed = []
+
+    def __init__(self):
+        super().__init__()
+        self.centralwidget = QWidget(self)
+        self.setCentralWidget(self.centralwidget)
+
+        self.setupUi(self)
+
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(1082, 771)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+
+        self.bA = QtWidgets.QPushButton(self.centralwidget)
+        self.bA.setGeometry(QtCore.QRect(30, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bA.setFont(font)
+        self.bA.setObjectName("bA")
+        self.bA.clicked.connect(lambda: self.clicked('A'))
+
+        self.bB = QtWidgets.QPushButton(self.centralwidget)
+        self.bB.setGeometry(QtCore.QRect(130, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bB.setFont(font)
+        self.bB.setObjectName("bB")
+        self.bB.clicked.connect(lambda: self.clicked('B'))
+
+        self.bW = QtWidgets.QPushButton(self.centralwidget)
+        self.bW.setGeometry(QtCore.QRect(420, 180, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bW.setFont(font)
+        self.bW.setObjectName("bW")
+        self.bW.clicked.connect(lambda: self.clicked('W'))
+
+        self.bX = QtWidgets.QPushButton(self.centralwidget)
+        self.bX.setGeometry(QtCore.QRect(510, 180, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bX.setFont(font)
+        self.bX.setObjectName("bX")
+        self.bX.clicked.connect(lambda: self.clicked('X'))
+
+        self.bY = QtWidgets.QPushButton(self.centralwidget)
+        self.bY.setGeometry(QtCore.QRect(600, 180, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bY.setFont(font)
+        self.bY.setObjectName("bY")
+        self.bY.clicked.connect(lambda: self.clicked('Y'))
+
+        self.bZ = QtWidgets.QPushButton(self.centralwidget)
+        self.bZ.setGeometry(QtCore.QRect(690, 180, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bZ.setFont(font)
+        self.bZ.setObjectName("bZ")
+        self.bZ.clicked.connect(lambda: self.clicked('Z'))
+
+        self.bV = QtWidgets.QPushButton(self.centralwidget)
+        self.bV.setGeometry(QtCore.QRect(960, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bV.setFont(font)
+        self.bV.setObjectName("bV")
+        self.bV.clicked.connect(lambda: self.clicked('V'))
+
+        self.bU = QtWidgets.QPushButton(self.centralwidget)
+        self.bU.setGeometry(QtCore.QRect(870, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bU.setFont(font)
+        self.bU.setObjectName("bU")
+        self.bU.clicked.connect(lambda: self.clicked('U'))
+
+        self.bT = QtWidgets.QPushButton(self.centralwidget)
+        self.bT.setGeometry(QtCore.QRect(780, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bT.setFont(font)
+        self.bT.setObjectName("bT")
+        self.bT.clicked.connect(lambda: self.clicked('T'))
+
+        self.bS = QtWidgets.QPushButton(self.centralwidget)
+        self.bS.setGeometry(QtCore.QRect(690, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bS.setFont(font)
+        self.bS.setObjectName("bS")
+        self.bS.clicked.connect(lambda: self.clicked('S'))
+
+        self.bR = QtWidgets.QPushButton(self.centralwidget)
+        self.bR.setGeometry(QtCore.QRect(600, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bR.setFont(font)
+        self.bR.setObjectName("bR")
+        self.bR.clicked.connect(lambda: self.clicked('R'))
+
+        self.bQ = QtWidgets.QPushButton(self.centralwidget)
+        self.bQ.setGeometry(QtCore.QRect(510, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bQ.setFont(font)
+        self.bQ.setObjectName("bQ")
+        self.bQ.clicked.connect(lambda: self.clicked('Q'))
+
+        self.bP = QtWidgets.QPushButton(self.centralwidget)
+        self.bP.setGeometry(QtCore.QRect(420, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bP.setFont(font)
+        self.bP.setObjectName("bP")
+        self.bP.clicked.connect(lambda: self.clicked('P'))
+
+        self.bO = QtWidgets.QPushButton(self.centralwidget)
+        self.bO.setGeometry(QtCore.QRect(330, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bO.setFont(font)
+        self.bO.setObjectName("bO")
+        self.bO.clicked.connect(lambda: self.clicked('O'))
+
+        self.bN = QtWidgets.QPushButton(self.centralwidget)
+        self.bN.setGeometry(QtCore.QRect(230, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bN.setFont(font)
+        self.bN.setObjectName("bN")
+        self.bN.clicked.connect(lambda: self.clicked('N'))
+
+        self.bM = QtWidgets.QPushButton(self.centralwidget)
+        self.bM.setGeometry(QtCore.QRect(130, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bM.setFont(font)
+        self.bM.setObjectName("bM")
+        self.bM.clicked.connect(lambda: self.clicked('M'))
+
+        self.bL = QtWidgets.QPushButton(self.centralwidget)
+        self.bL.setGeometry(QtCore.QRect(30, 100, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bL.setFont(font)
+        self.bL.setObjectName("bL")
+        self.bL.clicked.connect(lambda: self.clicked('L'))
+
+        self.bK = QtWidgets.QPushButton(self.centralwidget)
+        self.bK.setGeometry(QtCore.QRect(960, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bK.setFont(font)
+        self.bK.setObjectName("bK")
+        self.bK.clicked.connect(lambda: self.clicked('K'))
+
+        self.bJ = QtWidgets.QPushButton(self.centralwidget)
+        self.bJ.setGeometry(QtCore.QRect(870, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bJ.setFont(font)
+        self.bJ.setObjectName("bJ")
+        self.bJ.clicked.connect(lambda: self.clicked('J'))
+
+        self.bI = QtWidgets.QPushButton(self.centralwidget)
+        self.bI.setGeometry(QtCore.QRect(780, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bI.setFont(font)
+        self.bI.setObjectName("bI")
+        self.bI.clicked.connect(lambda: self.clicked('I'))
+
+        self.bH = QtWidgets.QPushButton(self.centralwidget)
+        self.bH.setGeometry(QtCore.QRect(690, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bH.setFont(font)
+        self.bH.setObjectName("bH")
+        self.bH.clicked.connect(lambda: self.clicked('H'))
+
+        self.bG = QtWidgets.QPushButton(self.centralwidget)
+        self.bG.setGeometry(QtCore.QRect(600, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bG.setFont(font)
+        self.bG.setObjectName("bG")
+        self.bG.clicked.connect(lambda: self.clicked('G'))
+
+        self.bF = QtWidgets.QPushButton(self.centralwidget)
+        self.bF.setGeometry(QtCore.QRect(510, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bF.setFont(font)
+        self.bF.setObjectName("bF")
+        self.bF.clicked.connect(lambda: self.clicked('F'))
+
+        self.bE = QtWidgets.QPushButton(self.centralwidget)
+        self.bE.setGeometry(QtCore.QRect(420, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bE.setFont(font)
+        self.bE.setObjectName("bE")
+        self.bE.clicked.connect(lambda: self.clicked('E'))
+
+        self.bD = QtWidgets.QPushButton(self.centralwidget)
+        self.bD.setGeometry(QtCore.QRect(330, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bD.setFont(font)
+        self.bD.setObjectName("bD")
+        self.bD.clicked.connect(lambda: self.clicked('D'))
+
+        self.bC = QtWidgets.QPushButton(self.centralwidget)
+        self.bC.setGeometry(QtCore.QRect(230, 20, 81, 71))
+        font = QtGui.QFont()
+        font.setPointSize(36)
+        self.bC.setFont(font)
+        self.bC.setObjectName("bC")
+        self.bC.clicked.connect(lambda: self.clicked('C'))
+
+        self.newgame = QtWidgets.QPushButton(self.centralwidget)
+        self.newgame.setGeometry(QtCore.QRect(800, 290, 231, 51))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.newgame.setFont(font)
+        self.newgame.setObjectName("newgame")
+        self.newgame.setText('New game')
+        self.newgame.clicked.connect(self.restart)
+        self.newgame.hide()
+
+        self.start = QtWidgets.QPushButton(self.centralwidget)
+        self.start.setGeometry(QtCore.QRect(480, 380, 231, 51))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.start.setFont(font)
+        self.start.setObjectName("start")
+        self.start.setText("Begin")
+        self.start.clicked.connect(self.get_name)
+
+        self.line = QtWidgets.QFrame(self.centralwidget)
+        self.line.setGeometry(QtCore.QRect(40, 590, 118, 3))
+        self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.line_2 = QtWidgets.QFrame(self.centralwidget)
+        self.line_2.setGeometry(QtCore.QRect(90, 320, 21, 271))
+        self.line_2.setFrameShape(QtWidgets.QFrame.VLine)
+        self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_2.setObjectName("line_2")
+        self.line_3 = QtWidgets.QFrame(self.centralwidget)
+        self.line_3.setGeometry(QtCore.QRect(100, 310, 161, 16))
+        self.line_3.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_3.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_3.setObjectName("line_3")
+        self.line_4 = QtWidgets.QFrame(self.centralwidget)
+        self.line_4.setGeometry(QtCore.QRect(250, 320, 16, 51))
+        self.line_4.setFrameShape(QtWidgets.QFrame.VLine)
+        self.line_4.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_4.setObjectName("line_4")
+
+        self.answerbox = QtWidgets.QLabel(self.centralwidget)
+        self.answerbox.setGeometry(QtCore.QRect(340, 480, 601, 91))
+        font = QtGui.QFont()
+        font.setPointSize(28)
+        self.answerbox.setFont(font)
+        self.answerbox.setText("")
+        self.answerbox.setObjectName("answerbox")
+
+        self.win = QtWidgets.QLabel(self.centralwidget)
+        self.win.setGeometry(QtCore.QRect(340, 400, 601, 91))
+        font = QtGui.QFont()
+        font.setPointSize(28)
+        self.win.setFont(font)
+        self.win.setText("")
+        self.win.setObjectName("win")
+
+        self.wrongtext = QtWidgets.QLabel(self.centralwidget)
+        self.wrongtext.setGeometry(QtCore.QRect(340, 500, 601, 91))
+        font = QtGui.QFont()
+        font.setPointSize(28)
+        self.wrongtext.setFont(font)
+        self.wrongtext.setText("Sorry, please type a valid string, without any special characters")
+        self.wrongtext.adjustSize()
+        self.wrongtext.setObjectName("wrongtext")
+        self.wrongtext.hide()
+
+        self.lost = QtWidgets.QLabel(self.centralwidget)
+        self.lost.setGeometry(QtCore.QRect(340, 580, 601, 91))
+        font = QtGui.QFont()
+        font.setPointSize(28)
+        self.lost.setFont(font)
+        self.lost.setText("Sorry, you lost")
+        self.lost.adjustSize()
+        self.lost.setObjectName("lost")
+        self.lost.hide()
+
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1082, 26))
+        self.menubar.setObjectName("menubar")
+        self.menuFile = QtWidgets.QMenu(self.menubar)
+        self.menuFile.setObjectName("menuFile")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+        self.actionNew_game = QtWidgets.QAction(MainWindow)
+        self.actionNew_game.setObjectName("actionNew_game")
+        self.actionNew_game.triggered.connect(self.restart)
+        self.menuFile.addAction(self.actionNew_game)
+        self.menubar.addAction(self.menuFile.menuAction())
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.bA.setText(_translate("MainWindow", "A"))
+        self.bB.setText(_translate("MainWindow", "B"))
+        self.bW.setText(_translate("MainWindow", "W"))
+        self.bX.setText(_translate("MainWindow", "X"))
+        self.bY.setText(_translate("MainWindow", "Y"))
+        self.bZ.setText(_translate("MainWindow", "Z"))
+        self.bV.setText(_translate("MainWindow", "V"))
+        self.bU.setText(_translate("MainWindow", "U"))
+        self.bT.setText(_translate("MainWindow", "T"))
+        self.bS.setText(_translate("MainWindow", "S"))
+        self.bR.setText(_translate("MainWindow", "R"))
+        self.bQ.setText(_translate("MainWindow", "Q"))
+        self.bP.setText(_translate("MainWindow", "P"))
+        self.bO.setText(_translate("MainWindow", "O"))
+        self.bN.setText(_translate("MainWindow", "N"))
+        self.bM.setText(_translate("MainWindow", "M"))
+        self.bL.setText(_translate("MainWindow", "L"))
+        self.bK.setText(_translate("MainWindow", "K"))
+        self.bJ.setText(_translate("MainWindow", "J"))
+        self.bI.setText(_translate("MainWindow", "I"))
+        self.bH.setText(_translate("MainWindow", "H"))
+        self.bG.setText(_translate("MainWindow", "G"))
+        self.bF.setText(_translate("MainWindow", "F"))
+        self.bE.setText(_translate("MainWindow", "E"))
+        self.bD.setText(_translate("MainWindow", "D"))
+        self.bC.setText(_translate("MainWindow", "C"))
+        self.menuFile.setTitle(_translate("MainWindow", "File"))
+        self.actionNew_game.setText(_translate("MainWindow", "New game"))
+
+    def get_name(self):
+        text = App().text
+        if text == '':
+            return
+        elif allowed.match(text):
+            Ui_MainWindow.required = text
+            self.answerbox.setText('_ '*len(text))
+            self.wrongtext.hide()
+            self.check_space(text)
+            self.answerbox.setWordWrap(True)
+            self.answerbox.adjustSize()
+            self.start.hide()
+        else:
+            self.wrongtext.show()
+
+
+    def check_space(self, text):
+        list1 = list(text)
+        for ch in list1:
+            if ch == ' ' or ch == ':' or ch == ';' or ch == '?' or ch == '!' or ch == '.' or ch == '/' or ch == ',' or ch == "'" or ch == '-':
+                self.revealer(ch)
+                Ui_MainWindow.answer.append(ch)
+
+    def clicked(self, ans):
+        clicked_button = self.sender()
+        Ui_MainWindow.pressed.append(clicked_button)
+        clicked_button.hide()
+        if ans.lower() in Ui_MainWindow.required:
+            for _ in range(Ui_MainWindow.required.count(ans.lower())):
+                Ui_MainWindow.answer.append(ans.lower())
+            self.revealer(ans.lower())
+            self.checker()
+        else:
+            Ui_MainWindow.wrong_count += 1
+            if Ui_MainWindow.wrong_count >= 6:
+                self.lost.show()
+                self.answerbox.setText(Ui_MainWindow.required)
+                self.answerbox.setWordWrap(True)
+                self.answerbox.adjustSize()
+                self.newgame.show()
+            self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.begin(self)
+        if Ui_MainWindow.wrong_count >= 1: ### face
+            painter.setPen(QPen(Qt.black, 1, Qt.SolidLine))
+            painter.drawEllipse(230, 400, 60, 60)
+        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setPen(QtCore.Qt.black)
+        painter.setBrush(QtCore.Qt.black)
+        if Ui_MainWindow.wrong_count >= 2: ### body
+            painter.drawLine(260, 460, 260, 540)
+        if Ui_MainWindow.wrong_count >= 3: ###legs
+            painter.drawLine(260, 540, 290, 590)
+        if Ui_MainWindow.wrong_count >= 4:
+            painter.drawLine(260, 540, 230, 590)
+        if Ui_MainWindow.wrong_count >= 5: ####arms
+            painter.drawLine(260, 500, 300, 460)
+        if Ui_MainWindow.wrong_count >= 6:
+            painter.drawLine(260, 500, 220, 460)
+        painter.end()
+
+
+    def revealer(self, ans):
+        index = Ui_MainWindow.required.index(ans) #find the index of a character from answer list in required list
+        Ui_MainWindow.indicies[index*2] = ans #assigns index to the character, to be used for displayed
+        try:
+            while True:
+                index = Ui_MainWindow.required.index(ans, index+1)
+                Ui_MainWindow.indicies[index*2] = ans
+        except:
+            pass
+        displayed = '_ '*len(Ui_MainWindow.required)
+        temp_list = list(displayed)
+        for index, ch in Ui_MainWindow.indicies.items():
+            temp_list[index] = ch
+        str2 = ''
+        displayed = str2.join(temp_list)
+        self.answerbox.setText(displayed)
+
+    def checker(self):
+        if sorted(Ui_MainWindow.answer) == sorted(list(Ui_MainWindow.required)):
+            self.win.setText("You won!")
+            self.newgame.show()
+    def restart(self):
+        Ui_MainWindow.answer = []
+        Ui_MainWindow.required = ''
+        Ui_MainWindow.indicies = {}
+        Ui_MainWindow.wrong_count = 0
+        for button in Ui_MainWindow.pressed:
+            button.show()
+        Ui_MainWindow.pressed = []
+        self.win.setText("")
+        self.answerbox.setText("")
+        self.newgame.hide()
+        self.lost.hide()
+        self.start.show()
+
+class App(QWidget):
+
+    def __init__(self):
+        super().__init__()
+        self.title = 'PyQt5 input dialogs - pythonspot.com'
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(380, 280, 640, 480)
+        self.get_name()
+
+    def get_name(self):
+        text, ok = QInputDialog.getText(self, 'Text Input Dialog', 'Enter your word:')
+        self.text = text
+        if text and ok:
+            return str(text)
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication([])
+    MainWindow = Ui_MainWindow()
+    MainWindow.show()
+    sys.exit(app.exec_())
